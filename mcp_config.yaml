@@ -1,6 +1,6 @@
 cockroachdb:
-  host: [DATABASE_DOMAIN_NAME]
+  host: postgre-db
   port: 5432
-  database: [DATABASE_NAME]
-  username: [DATABASE_USERNAME]
+  database: chinook_db
+  username: admin
   ssl_mode: disable

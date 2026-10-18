@@ -2,11 +2,7 @@
 
 set -e
 
-docker build -t assignment-demo:1.0 ./sample-app/
-
-docker run -d --name assignment \
-       -p 3000:80 \
-    assignment-demo:1.0
-
-sleep 10
-echo "Container started"
+docker network create chinook-net
+#Chinook seeder bec it's gonna take the chinook.db file
+docker build --target seeder -t chinook-seeder:latest .
+docker build --target agent -t chinook-agent:latest .

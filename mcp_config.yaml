@@ -1,5 +1,5 @@
 cockroachdb:
-  host: postgre-db
+  host: postgres-db
   port: 5432
   database: chinook_db
   username: admin

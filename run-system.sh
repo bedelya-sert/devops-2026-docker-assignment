@@ -9,9 +9,6 @@ docker network inspect chinook-net >/dev/null 2>&1 || docker network create chin
 docker build --target seeder -t chinook-seeder:latest .
 docker build --target agent -t agentc:latest .
 
-#Temporary workaround for the password secret error
-docker mcp secret set cockroachdb.password=pass123
-
 docker run -d \
     --name postgres-db \
     --network chinook-net \

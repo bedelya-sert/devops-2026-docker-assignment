@@ -7,7 +7,7 @@ export MSYS_NO_PATHCONV=1 #Prevent it from going out of LF
 docker network inspect chinook-net >/dev/null 2>&1 || docker network create chinook-net
 #Chinook seeder bec it's gonna take the chinook.db file
 docker build --target seeder -t chinook-seeder:latest .
-docker build --target agent -t chinook-agent:latest .
+docker build --target agent -t agentc:latest .
 
 #Temporary workaround for the password secret error
 docker mcp secret set cockroachdb.password=pass123
@@ -43,8 +43,19 @@ docker run -d \
     -v "$(pwd)/mcp_secret.env:/run/secrets/database-url:ro" \
     docker/mcp-gateway:latest \
     --transport=sse \
+    --secrets=/run/secrets/database-url \
     --allow-unauthenticated \
     --servers=cockroachdb \
     --tools=execute_query \
     --config=/mcp_config.yaml
 
+docker run --rm \
+    --name agentc \
+    --network chinook-net \
+    -v "$(pwd)/secret.ollama-api-key:/run/secrets/openai-api-key:ro" \
+    -e MCP_SERVER_URL=http://mcp-gateway:8811/sse \
+    -e DATABASE_DIALECT=PostgreSQL \
+    -e "QUESTION=What are the top 3 albums by sales?" \
+    -e OPENAI_API_BASE_URL=https://ollama.com/v1 \
+    -e OPENAI_MODEL_NAME=gpt-oss:20b \
+    agentc:latest

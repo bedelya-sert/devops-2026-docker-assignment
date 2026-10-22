@@ -9,6 +9,9 @@ docker network inspect chinook-net >/dev/null 2>&1 || docker network create chin
 docker build --target seeder -t chinook-seeder:latest .
 docker build --target agent -t chinook-agent:latest .
 
+#Temporary workaround for the password secret error
+docker mcp secret set cockroachdb.password=pass123
+
 docker run -d \
     --name postgres-db \
     --network chinook-net \
@@ -31,3 +34,17 @@ docker run --rm \
     -e SQLITE_FILE=/app/Chinook.db \
     -e DATABASE_URL=postgres://admin:pass123@postgres-db:5432/chinook_db \
     chinook-seeder:latest
+
+docker run -d \
+    --name mcp-gateway \
+    --network chinook-net \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -v "$(pwd)/mcp_config.yaml:/mcp_config.yaml:ro" \
+    -v "$(pwd)/mcp_secret.env:/run/secrets/database-url:ro" \
+    docker/mcp-gateway:latest \
+    --transport=sse \
+    --allow-unauthenticated \
+    --servers=cockroachdb \
+    --tools=execute_query \
+    --config=/mcp_config.yaml
+

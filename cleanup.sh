@@ -6,4 +6,4 @@ docker volume rm $(docker volume ls -q --filter label=project=chinook) 2>/dev/nu
 
 docker network rm $(docker network ls -q --filter label=project=chinook) 2>/dev/null
 
-docker rmi chinook-seeder:latest agentc:latest 2>/dev/null
+docker rmi $(docker images -q --filter label=project=chinook) 2>/dev/null

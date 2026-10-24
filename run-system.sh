@@ -4,13 +4,14 @@ set -e
 
 export MSYS_NO_PATHCONV=1 #Prevent it from going out of LF
 
-docker network inspect chinook-net >/dev/null 2>&1 || docker network create chinook-net
+docker network inspect chinook-net >/dev/null 2>&1 || docker network create --label project=chinook chinook-net
 #Chinook seeder bec it's gonna take the chinook.db file
-docker build --target seeder -t chinook-seeder:latest .
-docker build --target agent -t agentc:latest .
+docker build --label project=chinook --target seeder -t chinook-seeder:latest .
+docker build --label project=chinook --target agent -t agentc:latest .
 
 docker run -d \
     --name postgres-db \
+    --label project=chinook \
     --network chinook-net \
     -e POSTGRES_USER=admin \
     -e POSTGRES_PASSWORD=pass123 \
@@ -34,6 +35,7 @@ docker run --rm \
 
 docker run -d \
     --name mcp-gateway \
+    --label project=chinook \
     --network chinook-net \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v "$(pwd)/mcp_config.yaml:/mcp_config.yaml:ro" \

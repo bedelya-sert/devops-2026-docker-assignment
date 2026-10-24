@@ -28,6 +28,7 @@ echo "Database is ready"
 
 docker run --rm \
     --name chinook-seeder \
+    --label project=chinook \
     --network chinook-net \
     -v "$(pwd)/Chinook.db:/app/Chinook.db:ro" \
     -e SQLITE_FILE=/app/Chinook.db \
@@ -51,6 +52,7 @@ docker run -d \
 
 docker run --rm \
     --name agentc \
+    --label project=chinook \
     --network chinook-net \
     -v "$(pwd)/secret.ollama-api-key:/run/secrets/openai-api-key:ro" \
     -e MCP_SERVER_URL=http://mcp-gateway:8811/sse \

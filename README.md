@@ -135,3 +135,8 @@ __Weighting:__ 45%.
 [ollama]: https://ollama.com/
 [arch]: ./img/arch.jpg
 [submit]: https://moodle.setu.ie/mod/assign/view.php?id=4861067
+
+## Notes
+
+"run-system.sh" sets "MSYS_NO_PATHCONV=1" so Git Bash does not convert container paths like "/app/Chinook.db" into Windows paths. A ".gitattributes" file keeps LF line endings on scripts and config files, because CRLF endings broke the container entrypoints and the gateway secret.
+The agent sometimes takes many attempts, or loops, because the LLM repeatedly hits SQL errors from the query tool (for example-> duplicate "LIMIT" clauses). The containers and connections work correctly; rerunning usually produces an answer.

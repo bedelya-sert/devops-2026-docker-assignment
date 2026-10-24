@@ -13,6 +13,7 @@ docker run -d \
     --name postgres-db \
     --label project=chinook \
     --network chinook-net \
+    --mount type=volume,source=chinook-data,target=/var/lib/postgresql/data,volume-label=project=chinook \
     -e POSTGRES_USER=admin \
     -e POSTGRES_PASSWORD=pass123 \
     -e POSTGRES_DB=chinook_db \

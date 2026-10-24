@@ -1,2 +1,3 @@
 #!/bin/sh
-# TODO
+
+docker rm -f -v mcp-gateway postgres-db 2>/dev/null
